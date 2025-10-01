@@ -42,7 +42,7 @@ docker logs -f softdesignlivetest
 ### Swagger
 Abrir a seguinte URL no browser para visualizar o Swagger UI:
 ```
-http://localhost:8080/swagger-ui
+http://localhost:8089/swagger-ui/index.html#/
 ```
 
 ### Destruir o serviço
