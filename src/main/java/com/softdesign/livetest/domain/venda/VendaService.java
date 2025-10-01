@@ -55,6 +55,7 @@ public class VendaService {
 
     @Cacheable(value = "vendaCliente", key = "#clienteId")
     public List<Venda> listByCliente(String clienteId) {
+
         return vendaMongoRepository.findByClienteId(clienteId);
     }
 

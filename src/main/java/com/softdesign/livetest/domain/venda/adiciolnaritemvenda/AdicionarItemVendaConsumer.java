@@ -21,7 +21,14 @@ public class AdicionarItemVendaConsumer {
     public void consume(AdicionarItemVendaMessage adicionarItemVendaMessage) {
 
         try {
+
             LOGGER.info("#### -> Consumed message -> {}", adicionarItemVendaMessage);
+
+            // Adicionei um validação da mensagem recebida
+            if (adicionarItemVendaMessage.vendId() == null || adicionarItemVendaMessage.produtoId() == null || adicionarItemVendaMessage.quantidade() <= 0) {
+                LOGGER.warn("Mensagem inválida recebida: {}", adicionarItemVendaMessage);
+                return;
+            }
 
             adicionarItemVendaApplicationService.executar(
                     adicionarItemVendaMessage.vendId(),

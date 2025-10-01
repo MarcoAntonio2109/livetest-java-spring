@@ -47,17 +47,25 @@ public class VendasController {
         }
     }
 
+//    @GetMapping("/vendas/{id}")
+//    public ResponseEntity<VendaDTO> get(@PathVariable("id") String id) {
+//        try {
+//            var venda = vendaService.getById(id);
+//
+//            return ResponseEntity.accepted().body(VendaDTO.from(venda));
+//        } catch (Exception exception) {
+//            LOGGER.error(exception.getMessage(), exception);
+//            throw exception;
+//        }
+//    }
+
+    // Retirei o Try catch para tratar a exceção
     @GetMapping("/vendas/{id}")
     public ResponseEntity<VendaDTO> get(@PathVariable("id") String id) {
-        try {
-            var venda = vendaService.getById(id);
-
-            return ResponseEntity.accepted().body(VendaDTO.from(venda));
-        } catch (Exception exception) {
-            LOGGER.error(exception.getMessage(), exception);
-            throw exception;
-        }
+        var venda = vendaService.getById(id);
+        return ResponseEntity.ok(VendaDTO.from(venda));
     }
+
 
     @PostMapping("/vendas")
     public ResponseEntity<VendaDTO> createa(@RequestBody CreateVendaRequest createVendaRequest) {
@@ -92,6 +100,24 @@ public class VendasController {
             return ResponseEntity.ok(VendaDTO.from(vendas));
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage(), exception);
+            throw exception;
+        }
+    }
+
+    @PostMapping("/vendas-kafka")
+    public ResponseEntity<VendaDTO> create(@RequestBody CreateVendaRequest createVendaRequest) {
+        try {
+            var venda = createVendaApplicationService.execute(createVendaRequest);
+
+            var createdUri = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(venda.id())
+                    .toUri();
+
+            return ResponseEntity.created(createdUri).body(VendaDTO.from(venda));
+        } catch (Exception exception) {
+            LOGGER.error("Erro ao criar venda", exception);
             throw exception;
         }
     }
